@@ -18,7 +18,9 @@ export class UserService {
     //check if user already exists
     const user = await this.findByEmail(email);
     if (user) {
-      throw new Error('User already exists');
+      return {
+        message: 'User does already exist',
+      };
     }
     //hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -40,17 +42,21 @@ export class UserService {
     //check if user exists
     const user = await this.findByEmail(email);
     if (!user) {
-      throw new Error('User does not exist');
+      return {
+        message: 'Invalid password or email',
+      };
     }
     //check if password is correct
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      throw new Error('Invalid password');
+      return {
+        message: 'Invalid password or email',
+      };
     }
     //create token
     const payload = { email, userId: user.id };
     const token = this.jwtService.sign(payload);
-    return { token };
+    return { user, token };
   }
 
   findAll() {
