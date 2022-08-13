@@ -18,6 +18,6 @@ export class PropertiesController {
 
   @Delete(':propertyId')
   delete(@Param('propertyId') propertyId: number) {
-    return this.propertiesService.delete(propertyId);
+    return this.propertiesService.delete(+propertyId);
   }
 }

@@ -16,11 +16,11 @@ export class MessagesController {
 
   @Get(':propertyId')
   findAllByPropertyId(@Param('propertyId') propertyId: number) {
-    return this.messagesService.findAllByPropertyId(propertyId);
+    return this.messagesService.findAllByPropertyId(+propertyId);
   }
 
   @Delete(':messageId')
   delete(@Param('messageId') messageId: number) {
-    return this.messagesService.delete(messageId);
+    return this.messagesService.delete(+messageId);
   }
 }

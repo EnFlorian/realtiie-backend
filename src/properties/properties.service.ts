@@ -18,12 +18,13 @@ export class PropertiesService {
     return this.prismaService.property.findMany();
   }
 
-  delete(propertyId: number) {
-    this.prismaService.message.deleteMany({
+  async delete(propertyId: number) {
+    await this.prismaService.message.deleteMany({
       where: {
         propertyId: propertyId,
       },
     });
+
     return this.prismaService.property.delete({
       where: {
         id: propertyId,
