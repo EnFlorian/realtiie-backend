@@ -10,52 +10,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Tag {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  description String
-  Article     Article? @relation(fields: [articleId], references: [id])
-  articleId   Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+enum PropertyType {
+  APARTMENT
+  HOUSE
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  email     String    @unique
-  roles     String[]  @default(["USER"])
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  email     String   @unique
+  roles     String[] @default(["USER"])
   image     String?
   bio       String?
   password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  jwtToken  String?
-  articles   Article[]
-  comments   Comment[]
-}
-
-model Article {
-  id          Int       @id @default(autoincrement())
-  slug        String    @unique
-  title       String    @unique
-  description String
-  body        String
-  tags     Tag[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  author      User      @relation(fields: [authorId], references: [id])
-  authorId    Int
-  comments     Comment[]
-}
-
-model Comment {
-  id        Int      @id @default(autoincrement())
-  body      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  article   Article  @relation(fields: [articleId], references: [id])
-  articleId Int
+  jwtToken  String?
+}
+
+model Property {
+  id           Int          @id @default(autoincrement())
+  name         String       @unique
+  propertyType PropertyType @default(APARTMENT)
+  image        String?      @default("https://images.unsplash.com/photo-1505691723518-36a5ac3be353?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1400&q=70")
+  description  String
+  bedrooms     Int          @default(1)
+  bathrooms    Int          @default(1)
+  fireplace    Boolean      @default(false)
+  garage       Boolean      @default(false)
+  swimmingPool Boolean      @default(false)
+  price        Int
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  messages     Message[]
+}
+
+model Message {
+  id         Int       @id @default(autoincrement())
+  content    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Property   Property? @relation(fields: [propertyId], references: [id])
+  propertyId Int?
 }
