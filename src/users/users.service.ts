@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { AdminGuard } from 'src/guards/admin.guard';
 
@@ -58,10 +57,6 @@ export class UserService {
     const payload = { email, userId: user.id };
     const token = this.jwtService.sign(payload);
     return { user, token };
-  }
-
-  findAll() {
-    return this.prismaService.user.findMany();
   }
 
   findByEmail(email: string) {
