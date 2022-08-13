@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
+import { AdminGuard } from 'src/guards/admin.guard';
 
 @Injectable()
 export class UserService {
@@ -68,14 +69,7 @@ export class UserService {
     return user;
   }
 
-  findOne(id: number) {
-    return this.prismaService.user.findUnique({ where: { id } });
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.prismaService.user.update({ data: updateUserDto, where: { id } });
-  }
-
+  @UseGuards(AdminGuard)
   remove(id: number) {
     return this.prismaService.user.delete({ where: { id } });
   }
