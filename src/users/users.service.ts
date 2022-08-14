@@ -56,12 +56,12 @@ export class UserService {
     //create token
     const payload = { email, userId: user.id };
     const token = this.jwtService.sign(payload);
-    return { user, token };
+    return { user: { ...user, password: undefined }, token };
   }
 
   findByEmail(email: string) {
     const user = this.prismaService.user.findUnique({ where: { email } });
-    return user;
+    return { ...user, password: undefined };
   }
 
   @UseGuards(AdminGuard)
