@@ -16,7 +16,7 @@ export class UserService {
   async register(registerUserDto: RegisterUserDto) {
     const { name, email, password } = registerUserDto;
     //check if user already exists
-    const user = await this.findByEmail(email);
+    const user = await this.prismaService.user.findUnique({ where: { email } });
     if (user) {
       return {
         message: 'User does already exist',
@@ -40,7 +40,7 @@ export class UserService {
   async login(loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
     //check if user exists
-    const user = await this.findByEmail(email);
+    const user = await this.prismaService.user.findUnique({ where: { email } });
     if (!user) {
       return {
         message: 'Invalid password or email',
@@ -57,11 +57,6 @@ export class UserService {
     const payload = { email, userId: user.id };
     const token = this.jwtService.sign(payload);
     return { user: { ...user, password: undefined }, token };
-  }
-
-  findByEmail(email: string) {
-    const user = this.prismaService.user.findUnique({ where: { email } });
-    return { ...user, password: undefined };
   }
 
   @UseGuards(AdminGuard)
